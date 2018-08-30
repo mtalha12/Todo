@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        .display{
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="parent">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-6">
+                <input id="name" class=".table-hover" type="text" name="name" placeholder="Nmae" size="80%" />
+            </div>
+            <div class="col-sm-2"><button class="btn"  onclick="submit()">_Submit_</button></div>
+        <div class="col-sm-2"></div>
+    </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8">
+                <table id="table"></table>
+            </div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div id="edit" class="col-sm-8"></div>
+            <div class="col-sm-2"></div>
+        </div>
+    </div>
+    </div>
+</body>
+<script>
+    let editIn;
+    function submit() {
+        let list = [];
+        let name1 = document.getElementById("name").value;
+        let previusList = localStorage.getItem("list");
+        if (previusList != null) {
+            list = JSON.parse(previusList)
+        }
+        list.push({
+            id: list.length + 1,
+            name: name1,
+        })
+        localStorage.setItem("list", JSON.stringify(list))
+        document.getElementById("name").value = ""
+        printList()
+    }
+
+    function printList() {
+        var print = localStorage.getItem("list");
+        var showData = "";
+        if (print != null) {
+            console.log(print);
+            print = JSON.parse(print);
+            // console.log(print);
+            // // print.map(function (show) {
+                for (var i = 0; i < print.length; i++) {
+                showData += "<tr>" + "<td>" + print[i].name + "</td>" + "<td>" + "<button onclick=aelete("+print[i].id+ ") >_Delete_</button>" + "<button onclick=edit("+print[i].id+") >_Edit_</button>" + "</td>" + "</tr>"
+            // })
+                }
+            document.getElementById("table").innerHTML = showData;
+        }
+    }
+        printList()
+
+    // // setInterval(function () {
+    // //     printList()
+    // // }, 1000);
+
+    function aelete(id) {
+        var print = localStorage.getItem("list");
+        print = JSON.parse(print)
+        for (var i = 0; i < print.length; i++) {
+            if (print[i].id == id) {
+                print.splice(i, 1);
+                // console.log(print);
+                localStorage.setItem("list", JSON.stringify(print));
+                printList();
+                break;
+            }
+        }
+
+    }
+
+    function edit(id){
+        var print = localStorage.getItem("list");
+        print = JSON.parse(print)
+        for(var i=0;i<print.length;i++){
+            if(print[i].id == id){
+                editIn= print[i];
+                // console.log(i)
+            var add ="<input type='text' id='"+ print[i].id +"' size='80%' value='"+ print[i].name +"'/>";
+            var button="<button id='btn' class='btn' onclick=editButton("+print[i].id+")>_Update_</button>"
+              add=document.getElementById("edit").innerHTML = add + button;
+            }
+        }
+    }
+    function editButton(id){
+      var print =localStorage.getItem("list");
+        print = JSON.parse(print);
+        var newName = document.getElementById(id).value;
+        for(var i=0;i<print.length;i++){
+             if(print[i].id == editIn.id){
+            print[i].name=newName;
+            //  console.log(print[i].name)
+             localStorage.setItem("list",JSON.stringify(print))
+              var btn =document.getElementById("btn");
+              var input=document.getElementById(print[i].id);
+              btn.setAttribute("class","display")
+              input.setAttribute("class","display")
+              break;
+             }
+        }     
+             printList();
+
+    }
+
+        // print.forEach(function(val) {
+        //     console.log(val)
+
+        // })
+
+    // let table='<table><tr><th>Name</th><th>Edit</th><th>Delete</th></tr>';
+    // function table(){
+    //     table.map(function(){
+    //         table+=makingRow()
+    //     })
+    // }
+    //     table+='</table>';
+
+    // function makingRow(){
+    //     return("<tr><td></td><td></td><td></td></tr>")
+    // }
+
+</script>
+
+</html>
